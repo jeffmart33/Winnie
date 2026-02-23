@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin | Store Locator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <div class="admin-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Administration</p>
+          <h1>Manage Locations</h1>
+        </div>
+        <div class="actions">
+          <a href="/" style="text-decoration:none;"><button>View Locator</button></a>
+          <button id="logoutBtn" class="hidden">Logout</button>
+        </div>
+      </header>
+
+      <section id="loginPanel" class="panel">
+        <h2>Admin Login</h2>
+        <form id="loginForm" class="form-grid">
+          <input name="username" placeholder="Username" required />
+          <input name="password" placeholder="Password" type="password" required />
+          <button type="submit" class="primary">Login</button>
+        </form>
+        <p class="notice">Use credentials from your .env (default: admin / ChangeMe123!).</p>
+      </section>
+
+      <section id="adminPanel" class="admin-grid hidden">
+        <div class="panel">
+          <h2 id="formTitle">Add Location</h2>
+          <form id="locationForm" class="form-grid">
+            <input name="store_name" placeholder="Store name" required />
+            <select name="category" required>
+              <option value="Store">Store</option>
+              <option value="Restaurant">Restaurant</option>
+              <option value="Pharmacy">Pharmacy</option>
+              <option value="Pop-Up">Pop-Up</option>
+              <option value="Apparel">Apparel</option>
+            </select>
+            <input name="address" placeholder="Full address" />
+            <div class="actions">
+              <input name="latitude" placeholder="Latitude" type="number" step="any" />
+              <input name="longitude" placeholder="Longitude" type="number" step="any" />
+            </div>
+            <input name="google_maps_link" placeholder="Google Maps link (optional)" />
+            <input name="opening_hours" placeholder="Opening hours" required />
+            <input name="contact" placeholder="Contact info" />
+            <select name="status">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+            <div class="actions">
+              <button type="submit" class="primary">Save</button>
+              <button id="resetFormBtn" type="button">Reset</button>
+            </div>
+          </form>
+          <p class="notice">Address auto-geocodes if coordinates are blank. Coordinates reverse-fill address if address is blank.</p>
+        </div>
+
+        <div class="panel">
+          <h2>Location Records</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Category</th>
+                  <th>Status</th>
+                  <th>Address</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="locationRows"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="/js/admin.js"></script>
+  </body>
+</html>
