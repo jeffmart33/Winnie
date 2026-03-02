@@ -9,9 +9,9 @@
     "build": "cd frontend && npm run build",
     "dev:frontend": "cd frontend && npm run dev",
     "start:frontend": "cd frontend && npm run start",
-    "db:up": "docker compose up -d postgres",
-    "db:down": "docker compose down",
-    "db:logs": "docker compose logs -f postgres",
+    "db:up": "docker-compose up -d postgres",
+    "db:down": "docker-compose down",
+    "db:logs": "docker-compose logs -f postgres",
     "db:check": "node scripts/check-db.js"
   },
   "engines": {

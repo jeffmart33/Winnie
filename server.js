@@ -9,6 +9,7 @@ const bcrypt = require('bcryptjs');
 const SQLiteStoreFactory = require('connect-sqlite3');
 const { getDb } = require('./src/db');
 const { geocodeAddress, reverseGeocode } = require('./src/geocode');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,6 +18,11 @@ const COOKIE_SECURE = process.env.COOKIE_SECURE === 'true';
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || 'http://localhost:3001';
 
 const SQLiteStore = SQLiteStoreFactory(session);
+const sessionDir = path.join(__dirname, 'data');
+
+if (!fs.existsSync(sessionDir)) {
+  fs.mkdirSync(sessionDir, { recursive: true });
+}
 
 app.use(
   helmet({
