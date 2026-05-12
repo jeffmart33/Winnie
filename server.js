@@ -13,7 +13,7 @@ const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const HOST = process.env.HOST || '127.0.0.1';
+const HOST = '0.0.0.0';
 const COOKIE_SECURE = process.env.COOKIE_SECURE === 'true';
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || 'http://localhost:3001';
 
