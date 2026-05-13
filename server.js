@@ -42,17 +42,21 @@ app.set('trust proxy', 1);
 
 app.use(
   session({
-    store: new SQLiteStore({ db: 'sessions.db', dir: path.join(__dirname, 'data') }),
+    store: new SQLiteStore({
+      db: 'sessions.db',
+      dir: path.join(__dirname, 'data')
+    }),
     secret: process.env.SESSION_SECRET || 'replace-this-in-production',
     resave: false,
     saveUninitialized: false,
+    proxy: true,
     
     cookie: {
-  httpOnly: true,
-  sameSite: 'lax',
-  secure: true,
-  maxAge: 1000 * 60 * 60 * 8
-}
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      maxAge: 1000 * 60 * 60 * 8
+    }
   })
 );
 
