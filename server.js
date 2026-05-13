@@ -44,11 +44,11 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: COOKIE_SECURE,
-      maxAge: 1000 * 60 * 60 * 8
-    }
+  httpOnly: true,
+  sameSite: 'none',
+  secure: true,
+  maxAge: 1000 * 60 * 60 * 8
+}
   })
 );
 
