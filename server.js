@@ -37,6 +37,9 @@ app.use(
     credentials: true
   })
 );
+
+app.set('trust proxy', 1);
+
 app.use(
   session({
     store: new SQLiteStore({ db: 'sessions.db', dir: path.join(__dirname, 'data') }),
