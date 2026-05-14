@@ -344,13 +344,17 @@ app.post('/api/admin/locations', requireAdmin, async (req, res) => {
     console.log('SAVE REQUEST BODY:', req.body);
 console.log('SESSION:', req.session);
 
-    let location = normalizeLocationPayload(req.body);
-    const validationError = validateRequired(location);
-    if (validationError) return res.status(400).json({ error: validationError });
+let location = normalizeLocationPayload(req.body);
+const validationError = validateRequired(location);
 
-    //location = await enrichLocationFromGeo(location);
+if (validationError) {
+  return res.status(400).json({ error: validationError });
+}
 
-    const db = await getDb();
+// TEMP DISABLED
+// location = await enrichLocationFromGeo(location);
+
+const db = await getDb();
     const result = await db.run(
       `INSERT INTO locations
       (store_name, category, address, latitude, longitude, opening_hours, contact, google_maps_link, status)
