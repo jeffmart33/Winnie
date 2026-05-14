@@ -341,11 +341,14 @@ app.get('/api/admin/locations', requireAdmin, async (req, res) => {
 
 app.post('/api/admin/locations', requireAdmin, async (req, res) => {
   try {
+    console.log('SAVE REQUEST BODY:', req.body);
+console.log('SESSION:', req.session);
+
     let location = normalizeLocationPayload(req.body);
     const validationError = validateRequired(location);
     if (validationError) return res.status(400).json({ error: validationError });
 
-    location = await enrichLocationFromGeo(location);
+    //location = await enrichLocationFromGeo(location);
 
     const db = await getDb();
     const result = await db.run(
