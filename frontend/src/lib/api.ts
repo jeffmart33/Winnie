@@ -10,15 +10,16 @@ export async function api<T>(
 ): Promise<T> {
   const controller = new AbortController();
 
-  const timeout = setTimeout(() => {
+const timeout = setTimeout(() => {
   controller.abort();
-}, 60000);
+}, 90000);
 
   try {
     const response = await fetch(`${API_BASE}${path}`, {
-      method,
-      credentials: 'include',
-      headers: body
+  method,
+  credentials: 'include',
+  cache: 'no-store',
+  headers: body
         ? { 'Content-Type': 'application/json' }
         : undefined,
       body: body ? JSON.stringify(body) : undefined,
