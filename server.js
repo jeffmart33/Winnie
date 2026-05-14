@@ -33,6 +33,10 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store');
+  next();
+});
 app.use(
   cors({
     origin: FRONTEND_ORIGIN.split(',').map((item) => item.trim()),
@@ -48,8 +52,9 @@ app.use(
     
     secret: process.env.SESSION_SECRET || 'replace-this-in-production',
     resave: false,
-    saveUninitialized: false,
-    proxy: true,
+saveUninitialized: false,
+rolling: true,
+proxy: true,
     
     cookie: {
       httpOnly: true,
