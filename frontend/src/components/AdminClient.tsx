@@ -31,7 +31,13 @@ const initialForm: LocationInput = {
   status: 'active'
 };
 
+
 export default function AdminClient() {
+
+const [loggingIn, setLoggingIn] = useState(false);
+const [saving, setSaving] = useState(false);
+const [error, setError] = useState('');
+
   const [authenticated, setAuthenticated] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -60,11 +66,27 @@ export default function AdminClient() {
   }, [authenticated]);
 
   async function handleLogin(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    await api('/api/admin/login', 'POST', { username, password });
+  event.preventDefault();
+
+  if (loggingIn) return;
+
+  try {
+    setError('');
+    setLoggingIn(true);
+
+    await api('/api/admin/login', 'POST', {
+      username,
+      password
+    });
+
     setPassword('');
     setAuthenticated(true);
+  } catch (err) {
+    setError(err instanceof Error ? err.message : 'Login failed');
+  } finally {
+    setLoggingIn(false);
   }
+}
 
   async function handleLogout() {
     await api('/api/admin/logout', 'POST');
@@ -74,7 +96,14 @@ export default function AdminClient() {
   }
 
   async function handleSave(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  event.preventDefault();
+
+  if (saving) return;
+
+  try {
+    setError('');
+    setSaving(true);
+
     const payload = {
       ...form,
       latitude: form.latitude.trim(),
@@ -90,7 +119,12 @@ export default function AdminClient() {
     setEditingId(null);
     setForm(initialForm);
     await loadLocations();
+  } catch (err) {
+    setError(err instanceof Error ? err.message : 'Save failed');
+  } finally {
+    setSaving(false);
   }
+}
 
   function startEdit(item: LocationRecord) {
     setEditingId(item.id);
@@ -141,7 +175,17 @@ export default function AdminClient() {
           <form className="grid gap-2" onSubmit={handleLogin}>
             <input className="rounded-lg border border-line bg-panelAlt/40 p-2" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" required />
             <input className="rounded-lg border border-line bg-panelAlt/40 p-2" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" type="password" required />
-            <button className="rounded-lg bg-gradient-to-r from-mint to-emerald-400 p-2 font-semibold text-ink">Login</button>
+            <button
+  disabled={loggingIn}
+  className="rounded-lg bg-gradient-to-r from-mint to-emerald-400 p-2 font-semibold text-ink disabled:opacity-60"
+>
+  {loggingIn ? 'Logging in...' : 'Login'}
+</button>
+{error ? (
+  <p className="rounded-lg border border-red-500/40 bg-red-500/10 p-2 text-sm text-red-200">
+    {error}
+  </p>
+) : null}
           </form>
         </section>
       ) : (
@@ -170,7 +214,17 @@ export default function AdminClient() {
                 <option value="inactive">Inactive</option>
               </select>
               <div className="grid grid-cols-2 gap-2">
-                <button className="rounded-lg bg-gradient-to-r from-mint to-emerald-400 p-2 font-semibold text-ink">Save</button>
+                <button
+  disabled={saving}
+  className="rounded-lg bg-gradient-to-r from-mint to-emerald-400 p-2 font-semibold text-ink disabled:opacity-60"
+>
+  {saving ? 'Saving...' : 'Save'}
+</button>
+{error ? (
+  <p className="rounded-lg border border-red-500/40 bg-red-500/10 p-2 text-sm text-red-200">
+    {error}
+  </p>
+) : null}
                 <button
                   type="button"
                   className="rounded-lg border border-line bg-panelAlt/40 p-2"
@@ -181,6 +235,11 @@ export default function AdminClient() {
                 >
                   Reset
                 </button>
+                {error ? (
+  <p className="rounded-lg border border-red-500/40 bg-red-500/10 p-2 text-sm text-red-200">
+    {error}
+  </p>
+) : null}
               </div>
             </form>
           </section>
