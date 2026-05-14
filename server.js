@@ -6,7 +6,8 @@ const session = require('express-session');
 const helmet = require('helmet');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
-const SQLiteStoreFactory = require('connect-sqlite3');
+
+
 const { getDb } = require('./src/db');
 const { geocodeAddress, reverseGeocode } = require('./src/geocode');
 const fs = require('fs');
@@ -17,7 +18,8 @@ const HOST = '0.0.0.0';
 const COOKIE_SECURE = process.env.COOKIE_SECURE === 'true';
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || 'http://localhost:3001';
 
-const SQLiteStore = SQLiteStoreFactory(session);
+
+
 const sessionDir = path.join(__dirname, 'data');
 
 if (!fs.existsSync(sessionDir)) {
@@ -42,10 +44,8 @@ app.set('trust proxy', 1);
 
 app.use(
   session({
-    store: new SQLiteStore({
-      db: 'sessions.db',
-      dir: path.join(__dirname, 'data')
-    }),
+    
+    
     secret: process.env.SESSION_SECRET || 'replace-this-in-production',
     resave: false,
     saveUninitialized: false,
@@ -286,10 +286,19 @@ app.post('/api/admin/login', async (req, res) => {
     const valid = await bcrypt.compare(password, admin.password_hash);
     if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
 
-    req.session.adminId = admin.id;
-    req.session.adminUsername = admin.username;
+   req.session.adminId = admin.id;
+req.session.adminUsername = admin.username;
 
-    res.json({ ok: true, username: admin.username });
+req.session.save((err) => {
+  if (err) {
+    return res.status(500).json({ error: 'Session save failed' });
+  }
+
+  res.json({
+    ok: true,
+    username: admin.username
+  });
+});
   } catch (error) {
     res.status(500).json({ error: 'Login failed' });
   }
