@@ -1,4 +1,5 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
 
 type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
@@ -7,6 +8,12 @@ export async function api<T>(
   method: Method = 'GET',
   body?: unknown
 ): Promise<T> {
+  const controller = new AbortController();
+
+  const timeout = setTimeout(() => {
+    controller.abort();
+  }, 30000);
+
   try {
     const response = await fetch(`${API_BASE}${path}`, {
       method,
@@ -14,8 +21,11 @@ export async function api<T>(
       headers: body
         ? { 'Content-Type': 'application/json' }
         : undefined,
-      body: body ? JSON.stringify(body) : undefined
+      body: body ? JSON.stringify(body) : undefined,
+      signal: controller.signal
     });
+
+    clearTimeout(timeout);
 
     const data = await response.json();
 
@@ -24,9 +34,17 @@ export async function api<T>(
     }
 
     return data as T;
-  } catch (err) {
+  } catch (err: any) {
+    clearTimeout(timeout);
+
+    if (err.name === 'AbortError') {
+      throw new Error(
+        'Server took too long to respond. Please try again.'
+      );
+    }
+
     throw new Error(
-      'Server is waking up, please wait a few seconds and try again.'
+      'Unable to connect to server. Please check your internet and try again.'
     );
   }
 }
