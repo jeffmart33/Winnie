@@ -3,6 +3,7 @@ export type LocationRecord = {
   store_name: string;
   category: string;
   address: string;
+   state?: string;
   latitude: number;
   longitude: number;
   opening_hours: string;
