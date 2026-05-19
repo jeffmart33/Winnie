@@ -11,6 +11,7 @@ type LocationInput = {
   store_name: string;
   category: string;
   address: string;
+  state: string;
   latitude: string;
   longitude: string;
   google_maps_link: string;
@@ -23,6 +24,7 @@ const initialForm: LocationInput = {
   store_name: '',
   category: 'Store',
   address: '',
+  state: 'Lagos',
   latitude: '',
   longitude: '',
   google_maps_link: '',
@@ -132,6 +134,7 @@ const [error, setError] = useState('');
       store_name: item.store_name,
       category: item.category,
       address: item.address,
+      state: item.state || 'Lagos',
       latitude: String(item.latitude),
       longitude: String(item.longitude),
       google_maps_link: item.google_maps_link || '',
@@ -202,6 +205,19 @@ const [error, setError] = useState('');
                 <option value="Apparel">Apparel</option>
               </select>
               <input className="rounded-lg border border-line bg-panelAlt/40 p-2" value={form.address} onChange={(e) => setForm((p) => ({ ...p, address: e.target.value }))} placeholder="Full Address" />
+              <select
+  className="rounded-lg border border-line bg-panelAlt/40 p-2"
+  value={form.state}
+  onChange={(e) =>
+    setForm((p) => ({ ...p, state: e.target.value }))
+  }
+>
+  <option value="Abuja">Abuja</option>
+  <option value="Kano">Kano</option>
+  <option value="Ogun">Ogun</option>
+  <option value="Ibadan">Ibadan</option>
+  <option value="Lagos">Lagos</option>
+</select>
               <div className="grid grid-cols-2 gap-2">
                 <input className="rounded-lg border border-line bg-panelAlt/40 p-2" value={form.latitude} onChange={(e) => setForm((p) => ({ ...p, latitude: e.target.value }))} placeholder="Latitude" type="number" step="any" />
                 <input className="rounded-lg border border-line bg-panelAlt/40 p-2" value={form.longitude} onChange={(e) => setForm((p) => ({ ...p, longitude: e.target.value }))} placeholder="Longitude" type="number" step="any" />
